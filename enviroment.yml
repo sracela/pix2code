@@ -1,0 +1,13 @@
+name: p2c
+channels:
+  - defaults
+  - conda-forge
+  - anaconda
+dependencies:
+  - python=3.6
+  - tensorflow-gpu==1.14
+  - numpy
+  - h5py
+  - opencv
+  - keras-gpu
+  - flake8
