@@ -1,45 +1,21 @@
-# pix2code
+# pix2code extension
 *Generating Code from a Graphical User Interface Screenshot*
-
-[![License](http://img.shields.io/badge/license-APACHE2-blue.svg)](LICENSE.txt)
-
-* A video demo of the system can be seen [here](https://youtu.be/pqKeXkhFA3I)
-* The paper is available at [https://arxiv.org/abs/1705.07962](https://arxiv.org/abs/1705.07962)
-* Official research page: [https://uizard.io/research#pix2code](https://uizard.io/research#pix2code)
 
 ## Abstract
 Transforming a graphical user interface screenshot created by a designer into computer code is a typical task conducted by a developer in order to build customized software, websites, and mobile applications. In this paper, we show that deep learning methods can be leveraged to train a model end-to-end to automatically generate code from a single input image with over 77% of accuracy for three different platforms (i.e. iOS, Android and web-based technologies).
-
-## Citation
-
-```
-@article{beltramelli2017pix2code,
-  title={pix2code: Generating Code from a Graphical User Interface Screenshot},
-  author={Beltramelli, Tony},
-  journal={arXiv preprint arXiv:1705.07962},
-  year={2017}
-}
-```
-
-## Disclaimer
-
-The following software is shared for educational purposes only. The author and its affiliated institution are not responsible in any manner whatsoever for any damages, including any direct, indirect, special, incidental, or consequential damages of any character arising as a result of the use or inability to use this software.
-
-The project pix2code is a research project demonstrating an application of deep neural networks to generate code from visual inputs.
-The current implementation is not, in any way, intended, nor able to generate code in a real-world context.
-We could not emphasize enough that this project is experimental and shared for educational purposes only.
-Both the source code and the datasets are provided to foster future research in machine intelligence and are not designed for end users.
 
 ## Setup
 ### Prerequisites
 
 - Python 2 or 3
-- pip
+- Miniconda (or anaconda) 
 
 ### Install dependencies
 
 ```sh
-pip install -r  requirements.txt
+conda env create -f environment.yml
+conda activate p2c
+pip install flake8
 ```
 
 ## Usage
@@ -165,3 +141,19 @@ Even assuming a mature version of pix2code able to generate GUI code with 100% a
 * [NLP Highlights](https://soundcloud.com/nlp-highlights/17a) (podcast)
 * [Data Skeptic](https://dataskeptic.com/blog/episodes/2017/pix2code) (podcast)
 * Read comments on [Hacker News](https://news.ycombinator.com/item?id=14416530)
+
+## This is a fork of Tony Beltramelli pix2code
+Code from https://github.com/tonybeltramelli/pix2code
+
+[![License](http://img.shields.io/badge/license-APACHE2-blue.svg)](LICENSE.txt)
+
+* A video demo of the system can be seen [here](https://youtu.be/pqKeXkhFA3I)
+* The paper is available at [https://arxiv.org/abs/1705.07962](https://arxiv.org/abs/1705.07962)
+* Official research page: [https://uizard.io/research#pix2code](https://uizard.io/research#pix2code)
+
+@article{beltramelli2017pix2code,
+  title={pix2code: Generating Code from a Graphical User Interface Screenshot},
+  author={Beltramelli, Tony},
+  journal={arXiv preprint arXiv:1705.07962},
+  year={2017}
+}
