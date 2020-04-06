@@ -11,6 +11,12 @@ from classes.model.pix2code import *
 
 argv = sys.argv[1:]
 
+# save np.load
+np_load_old = np.load
+
+# modify the default parameters of np.load
+np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
+
 if len(argv) < 4:
     print("Error: not enough argument supplied:")
     print("sample.py <trained weights path> <trained model name> <input image> <output path> <search method (default: greedy)>")
@@ -23,6 +29,10 @@ else:
     search_method = "greedy" if len(argv) < 5 else argv[4]
 
 meta_dataset = np.load("{}/meta_dataset.npy".format(trained_weights_path))
+
+# restore np.load for future normal usage
+np.load = np_load_old
+
 input_shape = meta_dataset[0]
 output_size = meta_dataset[1]
 

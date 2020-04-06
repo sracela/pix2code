@@ -164,4 +164,8 @@ bin/
 .vscode
 
 #images and xml outputs
-code
+code/
+real_img/
+
+#papers
+papers/

@@ -22,6 +22,8 @@ class Vocabulary:
 
     def append(self, token):
         if token not in self.vocabulary:
+            #print(token)
+            #print(self.vocabulary)
             self.vocabulary[token] = self.size
             self.token_lookup[self.size] = token
             self.size += 1
@@ -31,6 +33,7 @@ class Vocabulary:
             items = self.vocabulary.items()
         else:
             items = self.vocabulary.iteritems()
+        #print(items)
         for key, value in items:
             binary = np.zeros(self.size)
             binary[value] = 1
@@ -75,4 +78,5 @@ class Vocabulary:
             except ValueError:
                 buffer += line
         input_file.close()
+        print(self.vocabulary)
         self.size = len(self.vocabulary)

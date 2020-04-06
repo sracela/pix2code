@@ -97,13 +97,18 @@ class Dataset:
                 self.voc.append(token)
                 token_sequence.append(token)
         token_sequence.append(END_TOKEN)
+        #print(token_sequence)
 
         suffix = [PLACEHOLDER] * CONTEXT_LENGTH
 
         a = np.concatenate([suffix, token_sequence])
+        print(len(a))
         for j in range(0, len(a) - CONTEXT_LENGTH):
             context = a[j:j + CONTEXT_LENGTH]
             label = a[j + CONTEXT_LENGTH]
+
+            #print(context)
+            #print(label)
 
             self.ids.append(sample_id)
             self.input_images.append(img)
@@ -137,7 +142,7 @@ class Dataset:
         temp = []
         for label in next_words:
             temp.append(voc.binary_vocabulary[label])
-
+        #print(temp)
         return temp
 
     def save_metadata(self, path):

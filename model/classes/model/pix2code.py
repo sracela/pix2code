@@ -3,7 +3,7 @@ __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
 from keras.layers import Input, Dense, Dropout, \
                          RepeatVector, LSTM, concatenate, \
-                         Conv2D, MaxPooling2D, Flatten
+                         Conv2D, MaxPooling2D, Flatten#, CuDNNLSTM
 from keras.models import Sequential, Model
 from keras.optimizers import RMSprop
 from keras import *
@@ -38,13 +38,17 @@ class pix2code(AModel):
         image_model.add(Dense(1024, activation='relu'))
         image_model.add(Dropout(0.3))
 
-        image_model.add(RepeatVector(CONTEXT_LENGTH))
+        print(image_model.output_shape)
+
+        image_model.add(RepeatVector(CONTEXT_LENGTH)) #why?
+
+        print(image_model.output_shape)
 
         visual_input = Input(shape=input_shape)
         encoded_image = image_model(visual_input)
 
         language_model = Sequential()
-        language_model.add(LSTM(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
+        language_model.add(LSTM(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size))) #to fit this?
         language_model.add(LSTM(128, return_sequences=True))
 
         textual_input = Input(shape=(CONTEXT_LENGTH, output_size))
