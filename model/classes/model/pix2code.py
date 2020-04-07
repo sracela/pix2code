@@ -11,8 +11,10 @@ from .Config import *
 from .AModel import *
 from .coordconv import CoordinateChannel2D
 
+#coordconv added or not
+is_coordconv = False
 class pix2code(AModel):
-    def __init__(self, input_shape, output_size, output_path, is_coorconv):
+    def __init__(self, input_shape, output_size, output_path):
         AModel.__init__(self, input_shape, output_size, output_path)
         self.name = "pix2code"
 
@@ -20,7 +22,7 @@ class pix2code(AModel):
 
         init_input_shape = input_shape
         #input_shape changes because of coordconv
-        if is_coorconv:
+        if is_coordconv:
             input_shape = list(input_shape)
             input_shape[2] = 5
             input_shape = tuple(input_shape)
@@ -46,24 +48,17 @@ class pix2code(AModel):
         image_model.add(Dense(1024, activation='relu'))
         image_model.add(Dropout(0.3))
 
-        print(image_model.output_shape)
-
-        image_model.add(RepeatVector(CONTEXT_LENGTH)) #why?
-
-        print(image_model.output_shape)
+        image_model.add(RepeatVector(CONTEXT_LENGTH))
 
         visual_input = Input(shape=init_input_shape)
         encoded_image = None
+
         #Add Coord layer before first Conv4
-        if is_coorconv:
-            x = CoordinateChannel2D()(visual_input)
-            encoded_image = image_model(x)
-        else:
-            encoded_image = image_model(visual_input)
-            
+        x = CoordinateChannel2D()(visual_input)
+        encoded_image = image_model(x) if is_coordconv else image_model(visual_input)
 
         language_model = Sequential()
-        language_model.add(LSTM(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size))) #to fit this?
+        language_model.add(LSTM(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
         language_model.add(LSTM(128, return_sequences=True))
 
         textual_input = Input(shape=(CONTEXT_LENGTH, output_size))
