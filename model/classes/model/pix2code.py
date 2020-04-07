@@ -9,14 +9,22 @@ from keras.optimizers import RMSprop
 from keras import *
 from .Config import *
 from .AModel import *
-
+from .coordconv import CoordinateChannel2D
 
 class pix2code(AModel):
-    def __init__(self, input_shape, output_size, output_path):
+    def __init__(self, input_shape, output_size, output_path, is_coorconv):
         AModel.__init__(self, input_shape, output_size, output_path)
         self.name = "pix2code"
 
         image_model = Sequential()
+
+        init_input_shape = input_shape
+        #input_shape changes because of coordconv
+        if is_coorconv:
+            input_shape = list(input_shape)
+            input_shape[2] = 5
+            input_shape = tuple(input_shape)
+
         image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu', input_shape=input_shape))
         image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu'))
         image_model.add(MaxPooling2D(pool_size=(2, 2)))
@@ -44,8 +52,15 @@ class pix2code(AModel):
 
         print(image_model.output_shape)
 
-        visual_input = Input(shape=input_shape)
-        encoded_image = image_model(visual_input)
+        visual_input = Input(shape=init_input_shape)
+        encoded_image = None
+        #Add Coord layer before first Conv4
+        if is_coorconv:
+            x = CoordinateChannel2D()(visual_input)
+            encoded_image = image_model(x)
+        else:
+            encoded_image = image_model(visual_input)
+            
 
         language_model = Sequential()
         language_model.add(LSTM(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size))) #to fit this?

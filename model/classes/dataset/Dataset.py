@@ -102,7 +102,7 @@ class Dataset:
         suffix = [PLACEHOLDER] * CONTEXT_LENGTH
 
         a = np.concatenate([suffix, token_sequence])
-        print(len(a))
+        #print(len(a))
         for j in range(0, len(a) - CONTEXT_LENGTH):
             context = a[j:j + CONTEXT_LENGTH]
             label = a[j + CONTEXT_LENGTH]

@@ -13,6 +13,9 @@ from classes.model.pix2code import *
 
 
 def run(input_path, output_path, is_memory_intensive=False, pretrained_model=None):
+    #coordconv added or not
+    is_coordconv = True
+
     np.random.seed(1234)
 
     dataset = Dataset()
@@ -40,7 +43,7 @@ def run(input_path, output_path, is_memory_intensive=False, pretrained_model=Non
 
         generator = Generator.data_generator(voc, gui_paths, img_paths, batch_size=BATCH_SIZE, generate_binary_sequences=True)
 
-    model = pix2code(input_shape, output_size, output_path)
+    model = pix2code(input_shape, output_size, output_path, is_coordconv)
 
     if pretrained_model is not None:
         model.model.load_weights(pretrained_model)

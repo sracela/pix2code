@@ -17,6 +17,9 @@ np_load_old = np.load
 # modify the default parameters of np.load
 np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
 
+#coordconv added or not
+is_coordconv = True
+
 if len(argv) < 4:
     print("Error: not enough argument supplied:")
     print("generate.py <trained weights path> <trained model name> <input image> <output path> <search method (default: greedy)>")
@@ -32,7 +35,7 @@ meta_dataset = np.load("{}/meta_dataset.npy".format(trained_weights_path))
 input_shape = meta_dataset[0]
 output_size = meta_dataset[1]
 
-model = pix2code(input_shape, output_size, trained_weights_path)
+model = pix2code(input_shape, output_size, trained_weights_path, is_coordconv)
 model.load(trained_model_name)
 
 sampler = Sampler(trained_weights_path, input_shape, output_size, CONTEXT_LENGTH)
