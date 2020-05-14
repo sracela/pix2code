@@ -1,22 +1,33 @@
 from __future__ import absolute_import
 __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
+
+import keras
 from keras.layers import Input, Dense, Dropout, \
                          RepeatVector, LSTM, concatenate, \
                          Conv2D, MaxPooling2D, Flatten#, CuDNNLSTM
 from keras.models import Sequential, Model
 from keras.optimizers import RMSprop
-from keras import *
+
+# to setup tensorboard: https://www.machinecurve.com/index.php/2019/11/13/how-to-use-tensorboard-with-keras/#implementing-tensorboard-into-your-keras-model
+# We also import the Keras backend for choosing our channels first / channels last approach.
+# We import TensorBoard from the Keras callbacks.
+from keras import backend as K
+from keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint
+from time import time
+
 from .Config import *
 from .AModel import *
 from .coordconv import CoordinateChannel2D
 
 #coordconv added or not
-is_coordconv = False
+is_coordconv = True
+# validation split = 0.2 ??
 class pix2code(AModel):
     def __init__(self, input_shape, output_size, output_path):
         AModel.__init__(self, input_shape, output_size, output_path)
         self.name = "pix2code"
+        self.checkpoint_path=f'{output_path}/checkpoints/testmodel.h5'
 
         image_model = Sequential()
 
@@ -73,15 +84,53 @@ class pix2code(AModel):
         self.model = Model(inputs=[visual_input, textual_input], outputs=decoder)
 
         optimizer = RMSprop(lr=0.0001, clipvalue=1.0)
-        self.model.compile(loss='categorical_crossentropy', optimizer=optimizer)
+        # self.model.compile(loss='categorical_crossentropy', optimizer=optimizer)
+
+        # Compile  the model
+
+        self.model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+
+        # Define Tensorboard as a Keras callback
+
+        tensorboard = TensorBoard(
+        log_dir= "{}/logs".format(self.output_path),
+        histogram_freq=0,
+        write_images=True
+        )
+        self.keras_callbacks = [
+            tensorboard,
+            EarlyStopping(monitor='loss', patience=5, mode='min', min_delta=0.0001),
+            ModelCheckpoint("{}/checkpoints/testmodel.h5".format(self.output_path), monitor='loss', save_best_only=True, mode='min')
+            ]
 
     def fit(self, images, partial_captions, next_words):
-        self.model.fit([images, partial_captions], next_words, shuffle=False, epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=1)
+        self.model.fit([images, partial_captions], next_words,
+                        shuffle=False,
+                        epochs=EPOCHS,
+                        batch_size=BATCH_SIZE,
+                        verbose=1,
+                        validation_split= 0.2,
+                        callbacks=self.keras_callbacks)
         self.save()
 
     def fit_generator(self, generator, steps_per_epoch):
-        self.model.fit_generator(generator, steps_per_epoch=steps_per_epoch, epochs=EPOCHS, verbose=1)
+        self.model.fit_generator(generator,
+                                steps_per_epoch=steps_per_epoch,
+                                epochs=EPOCHS,
+                                verbose=1,
+                                callbacks=self.keras_callbacks)
         self.save()
+
+# # Generate generalization metrics
+# score = model.evaluate(input_test, target_test, verbose=0)
+    # def evaluate_generator(self, generator,
+    #                        steps=None,
+    #                        callbacks=None,
+    #                        max_queue_size=10,
+    #                        workers=1,
+    #                        use_multiprocessing=False,
+    #                        verbose=0):
+# print(f'Test loss: {score[0]} / Test accuracy: {score[1]}')
 
     def predict(self, image, partial_caption):
         return self.model.predict([image, partial_caption], verbose=0)[0]
