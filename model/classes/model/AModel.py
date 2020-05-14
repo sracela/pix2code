@@ -1,6 +1,7 @@
 __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
 from keras.models import model_from_json
+import tensorflow as tf
 
 
 class AModel:
@@ -21,5 +22,5 @@ class AModel:
         output_name = self.name if name == "" else name
         with open("{}/{}.json".format(self.output_path, output_name), "r") as json_file:
             loaded_model_json = json_file.read()
-        self.model = model_from_json(loaded_model_json)
+        self.model = tf.keras.models.model_from_json(loaded_model_json, custom_objects={'Attention': tf.keras.layers.Attention})
         self.model.load_weights("{}/{}.h5".format(self.output_path, output_name))

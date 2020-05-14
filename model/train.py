@@ -9,7 +9,10 @@ sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
 import sys
 
 from classes.dataset.Generator import *
-from classes.model.pix2code import *
+#from classes.model.pix2code import *
+
+#attention
+from classes.model.pix2code_attention import *
 
 
 def run(input_path, output_path, is_memory_intensive=False, pretrained_model=None):
