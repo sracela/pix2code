@@ -1,0 +1,40 @@
+body {
+    font-family: 'Roboto';font-size: 22px;
+}
+
+.container {
+    display: flex;
+}
+
+.column {
+    flex: 1;
+    
+    /*for demo purposes only */
+    background: #f2f2f2;
+    border: 1px solid #e6e6e6;
+    box-sizing: border-box;
+}
+
+.column-one {
+    order: 1;
+}
+.column-two {
+    order: 2;
+}
+.column-three {
+    order: 3;
+}
+.column-four {
+    order: 4;
+}
+.column-five {
+    order: 5;
+}
+.image-wrapper{
+    height: 557.328px;
+    width: 313.5px;
+}
+img {
+    width: 100%; 
+}
+   
