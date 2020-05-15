@@ -7,7 +7,8 @@ import os
 import sys
 
 from classes.Sampler import *
-from classes.model.pix2code import *
+#from classes.model.pix2code import *
+from classes.model.pix2code_attention import *
 
 argv = sys.argv[1:]
 
