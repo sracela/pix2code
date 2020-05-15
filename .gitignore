@@ -166,6 +166,10 @@ bin/
 #images and xml outputs
 code/
 real_img/
+compiler/compile_batch.sh
 
 #papers
 papers/
+
+#android-render
+android/

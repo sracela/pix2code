@@ -1,11 +1,11 @@
 #!/bin/bash
-#first run Android/Sdk/emulator/./emulator -avd Nexus_5X_API_29 
-adb shell monkey -p com.example.randomizer -v  1
+#first run ~/Android/Sdk/emulator/./emulator -avd Pixel_2_API_29
+~/Android/Sdk/platform-tools/./adb shell monkey -p com.example.randomizer -v  1
 echo "Randomizer started in emulator"
-Android/Sdk/platform-tools/./adb -s emulator-5554 exec-out screencap -p > screen.png
+~/Android/Sdk/platform-tools/./adb -s emulator-5554 exec-out screencap -p > screen.png
 echo "screencap done"
-declare -i count=0
-for file in AndroidStudioProjects/Randomizer/app/src/main/res/layout/screens/*
+#declare -i count=0
+for file in android/Randomizer/app/src/main/res/layout/screens/*
 do
 	echo $file
 	#sed '24d' file
@@ -16,20 +16,21 @@ do
 	base_name=${file##*/}
 	file_name=${base_name%.*}
 	echo $file_name
-	mv $file AndroidStudioProjects/Randomizer/app/src/main/res/layout/activity_main.xml
+	mv $file android/Randomizer/app/src/main/res/layout/activity_main.xml
 	echo "finish rename"
-	cd AndroidStudioProjects/Randomizer/
+	cd android/Randomizer/
 	./gradlew installDebug
 	cd ../..
-	adb shell monkey -p com.example.randomizer -v 1
+	~/Android/Sdk/platform-tools/./adb shell monkey -p com.example.randomizer -v 1
 	echo "Randomizer restarted in emulator"
 	echo "Installed debug"
 	#count=$((count+1))
-	name="screens/${file_name}.png"
+	name="code/p2c_coordconv_20_Epochs/screens/${file_name}.png"
 	echo $name
-	Android/Sdk/platform-tools/adb -s emulator-5554 exec-out screencap -p > $name 
+	sleep 4
+	~/Android/Sdk/platform-tools/./adb -s emulator-5554 exec-out screencap -p > $name 
 	echo "second screencap"
-	$count = $count + 1
+	#$count = $count + 1
 
 done
 #mv AndroidStudioProjects/Randomizer/app/src/main/res/layout/activity_main.xml AndroidStudioProjects/Randomizer/app/src/main/res/layout/activity_main1_aux.xml
