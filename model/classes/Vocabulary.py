@@ -18,7 +18,7 @@ class Vocabulary:
 
         self.append(START_TOKEN)
         self.append(END_TOKEN)
-        self.append(PLACEHOLDER)
+        # self.append(PLACEHOLDER)
 
     def append(self, token):
         if token not in self.vocabulary:
@@ -54,13 +54,13 @@ class Vocabulary:
         return string
 
     def save(self, path):
-        output_file_name = "{}/words.vocab".format(path)
+        output_file_name = "{}/wordsnt.vocab".format(path)
         output_file = open(output_file_name, 'w')
         output_file.write(self.get_serialized_binary_representation())
         output_file.close()
 
     def retrieve(self, path):
-        input_file = open("{}/words.vocab".format(path), 'r')
+        input_file = open("{}/wordsnt.vocab".format(path), 'r')
         buffer = ""
         for line in input_file:
             try:
